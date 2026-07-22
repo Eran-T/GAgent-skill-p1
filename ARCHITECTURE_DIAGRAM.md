@@ -11,41 +11,50 @@ The diagram below highlights how the client layer, Agent Platform Agent Runtime,
 ```mermaid
 graph TD
     classDef primary fill:#4285F4,stroke:#333,stroke-width:2px,color:#fff;
-    classDef secondary fill:#34A853,stroke:#333,stroke-width:1px,color:#fff;
+    classDef skill fill:#34A853,stroke:#333,stroke-width:1px,color:#fff;
     classDef external fill:#EA4335,stroke:#333,stroke-width:1px,color:#fff;
     classDef state fill:#FBBC05,stroke:#333,stroke-width:1px,color:#000;
 
-    subgraph Client Layer
-        C["Client Application / Agy CLI"]:::primary
+    subgraph Client ["Client Environment (IDE / Local Assistant / CLI)"]
+        IDE["Local AI Coding Assistant<br>(Antigravity / Claude Code)"]:::primary
+        
+        subgraph Local_Skills ["Custom Agentic Skills (Workspace-Scoped)"]
+            S_AUTH["gcp-auth Skill<br>(Generates ADC Access Token)"]:::skill
+            S_PROTO["a2a-protocol Skill<br>(Packages JSON-RPC 2.0 Payload)"]:::skill
+            S_CAT["knowledge-catalog-agent Skill<br>(Composition & Target Runbook)"]:::skill
+        end
     end
 
     subgraph GCP ["Google Cloud Platform (us-central1)"]
-        subgraph Agent Platform Agent Runtime
-            ADK["google-adk Agent Engine App<br>(gagent-skills)"]:::primary
-            BQ_P["BigQuery Analytics Plugin"]:::secondary
+        subgraph Runtime ["Agent Platform Agent Runtime"]
+            ADK["google-adk Backend App<br>(gagent-skills)"]:::primary
+            BQ_P["BigQuery Analytics Plugin"]:::skill
         end
 
-        subgraph GCP Managed Services
+        subgraph Services ["GCP Managed Services"]
             DP_MCP["Dataplex Catalog MCP Server<br>(dataplex.googleapis.com/mcp)"]:::external
             BQ_D[("BigQuery Telemetry Dataset<br>(adk_agent_analytics)")]:::state
             SES[("Agent Platform Session Service")]:::state
         end
     end
 
-    subgraph Cloud Run Microservices
+    subgraph Microservices ["Cloud Run Microservices"]
         CH_MCP["Charting MCP Server<br>(SSE Endpoint)"]:::external
     end
 
-    %% Client Interactions
-    C -->|1. Direct SDK/REST Call| ADK
+    %% Client Skill Orchestration
+    IDE -->|1. Loads Custom Skills| Local_Skills
+    S_AUTH -->|Yields Token| S_PROTO
+    S_PROTO -->|Encapsulates Message| S_CAT
     
-    %% ADK Tool Integrations
-    ADK -->|2. Query Metadata| DP_MCP
-    ADK -->|3. Generate Visuals| CH_MCP
+    %% Client-to-Agent Communication Flow
+    S_CAT ====>|2. Authenticated HTTP POST<br>(JSON-RPC 2.0 with Session & Data Parts)| ADK
     
-    %% Session & Telemetry Logs
-    ADK -->|4. Register State| SES
+    %% Remote Tool & Telemetry Execution
+    ADK -->|3. Query Metadata (with Delegated Token)| DP_MCP
+    ADK -->|4. Generate Visuals| CH_MCP
     ADK -->|5. Record Telemetry| BQ_P
+    ADK -->|6. Maintain History| SES
     BQ_P -.->|Stream Logs| BQ_D
 ```
 
