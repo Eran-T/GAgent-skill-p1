@@ -43,19 +43,19 @@ graph TD
     end
 
     %% Client Skill Orchestration
-    IDE -->|1. Loads Custom Skills| Local_Skills
-    S_AUTH -->|Yields Token| S_PROTO
-    S_PROTO -->|Encapsulates Message| S_CAT
+    IDE -->|"1. Loads Custom Skills"| Local_Skills
+    S_AUTH -->|"Yields Token"| S_PROTO
+    S_PROTO -->|"Encapsulates Message"| S_CAT
     
     %% Client-to-Agent Communication Flow
-    S_CAT ====>|2. Authenticated HTTP POST<br>(JSON-RPC 2.0 with Session & Data Parts)| ADK
+    S_CAT -->|"2. Authenticated HTTP POST (JSON-RPC 2.0 with Session & Data Parts)"| ADK
     
     %% Remote Tool & Telemetry Execution
-    ADK -->|3. Query Metadata (with Delegated Token)| DP_MCP
-    ADK -->|4. Generate Visuals| CH_MCP
-    ADK -->|5. Record Telemetry| BQ_P
-    ADK -->|6. Maintain History| SES
-    BQ_P -.->|Stream Logs| BQ_D
+    ADK -->|"3. Query Metadata (with Delegated Token)"| DP_MCP
+    ADK -->|"4. Generate Visuals"| CH_MCP
+    ADK -->|"5. Record Telemetry"| BQ_P
+    ADK -->|"6. Maintain History"| SES
+    BQ_P -.->|"Stream Logs"| BQ_D
 ```
 
 ---
