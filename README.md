@@ -36,6 +36,26 @@ GAgent-skill-p1/
 
 ---
 
+## 🔑 Required Google Cloud IAM Roles
+
+To deploy and execute the agent successfully, ensure the following Identity and Access Management (IAM) configurations are active in your Google Cloud Project:
+
+### 1. For the Deploying Identity (User or CI/CD Service Account)
+The identity executing `agents-cli deploy` requires:
+*   **`roles/aiplatform.admin`** – To create, update, and manage the Reasoning Engine container deployment.
+*   **`roles/storage.objectAdmin`** – To stage package code source files inside the deployment Cloud Storage bucket.
+*   **`roles/iam.serviceAccountUser`** – To attach the runtime service account to the deployed container.
+
+### 2. For the Runtime Service Account
+The service account assigned to the Agent Platform Agent Runtime container (specified during deploy or fallback to default Compute Engine SA) requires:
+*   **`roles/aiplatform.user`** – To access and query Gemini models via Vertex AI GenAI APIs.
+*   **`roles/mcp.toolUser`** – **CRITICAL.** Grants authorization to communicate with and execute tools on Google Cloud's managed MCP servers (such as `https://dataplex.googleapis.com/mcp`).
+*   **`roles/dataplex.metadataReader`** – To search, view, and list assets inside the Dataplex Knowledge Catalog.
+*   **`roles/bigquery.dataEditor`** & **`roles/bigquery.user`** – To write live interaction telemetry data to the BigQuery Analytics tables.
+*   **`roles/storage.objectCreator`** – To upload conversation trace logs and OpenTelemetry artifacts to the configured Cloud Storage logging bucket.
+
+---
+
 ## ⚡ Setup & Dependencies
 
 First, configure your local environment and authenticate with Google Cloud:

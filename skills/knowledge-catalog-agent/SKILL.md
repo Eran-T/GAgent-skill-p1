@@ -17,7 +17,18 @@ These properties should be updated dynamically depending on your active deployme
 
 ---
 
-## 2. Agent Core Capabilities & Semantic Domain
+## 2. Required IAM Permissions
+
+For this agent and its tools to execute correctly at runtime, the container's **Runtime Service Account** must hold the following Google Cloud roles:
+1.  **`roles/aiplatform.user`** – Grants access to run inferences on Gemini models via Vertex AI GenAI.
+2.  **`roles/mcp.toolUser`** – **CRITICAL.** Grants credentials permission to communicate with and invoke tools on Google Cloud's managed MCP servers (e.g. `https://dataplex.googleapis.com/mcp`).
+3.  **`roles/dataplex.metadataReader`** & **`roles/dataplex.viewer`** – Enables searching and retrieving metadata assets from the Dataplex Knowledge Catalog.
+4.  **`roles/bigquery.dataEditor`** & **`roles/bigquery.user`** – Allows writing interaction and instrumentation metrics to BigQuery tables.
+5.  **`roles/storage.objectCreator`** – Allows uploading execution logging artifacts and telemetry payloads to Cloud Storage.
+
+---
+
+## 3. Agent Core Capabilities & Semantic Domain
 
 This agent is integrated with Google Cloud Dataplex (Knowledge Catalog) and a custom Charting service via Model Context Protocol (MCP) toolsets. It serves as your main entry point for:
 1.  **Metadata Discovery & Search:** Searching and listing data assets, datasets, databases, and tables across the organization.
@@ -30,7 +41,7 @@ This agent is integrated with Google Cloud Dataplex (Knowledge Catalog) and a cu
 
 ---
 
-## 3. Expected Interaction Patterns & Queries
+## 4. Expected Interaction Patterns & Queries
 
 When formulating queries for the remote agent, craft them to target the following semantic operations:
 
@@ -40,8 +51,8 @@ When formulating queries for the remote agent, craft them to target the followin
 
 ---
 
-## 4. Efficient Execution Blueprint
+## 5. Efficient Execution Blueprint
 To query this agent efficiently:
-1.  Read this file to understand the **Project details** and **Query patterns** required.
+1.  Read this file to understand the **Project details**, **Query patterns**, and **IAM permission configurations** required.
 2.  Import the generic execution functions from the **`gcp-agent-client`** skill.
 3.  Write and execute a single scratch script containing the Agent Client initialized with the `Resource Name` and `Project ID` defined above.
