@@ -58,7 +58,7 @@ GAgent-skill-p1/
 
 ## 🛠️ Google `agents-cli` Toolchain Context
 
-The **[`agents-cli`](https://cloud.google.com/vertex-ai/docs)** is the unified CLI manager designed to streamline the lifecycle of ADK-based agents. It bridges local developer playgrounds with enterprise GCP cloud runtimes:
+The **[`agents-cli`](https://google.github.io/agents-cli/)** is the unified CLI manager designed to streamline the lifecycle of ADK-based agents. It bridges local developer playgrounds with enterprise GCP cloud runtimes:
 
 *   **`agents-cli install`**: Gathers and locks third-party python container packages inside `.venv` using Astral `uv`.
 *   **`agents-cli playground`**: Launches a premium web UI on your local machine to test prompt responses, view active MCP tool schemas, and trace output JSONs before deploying.
@@ -146,6 +146,6 @@ agents-cli deploy \
 
 ## 🔗 Additional References & Documentation
 
-*   🛠️ **[`agents-cli`](https://cloud.google.com/vertex-ai/docs)**: Official developer reference documentation for the Google Agents Command Line Toolchain.
-*   📖 **[`agent-registry/google-managed-mcps`](https://cloud.google.com/dataplex/docs)**: Reference architecture and connection guidelines for Google-managed Model Model Model Context Protocol (MCP) servers (e.g., Dataplex Knowledge Catalog).
+*   🛠️ **[`agents-cli`](https://google.github.io/agents-cli/)**: Official developer reference documentation for the Google Agents Command Line Toolchain.
+*   📖 **[`agent-registry/google-managed-mcps`](https://cloud.google.com/blog/products/ai-machine-learning/google-managed-mcp-servers-are-available-for-everyone?e=48754805)**: Official product release announcement detailing connection architectures for Google Cloud's managed Model Context Protocol (MCP) servers.
 *   📐 **[Architecture and Sequence Flows](./ARCHITECTURE_DIAGRAM.md)**: Mermaid charts representing multi-turn queries, session memory persistence, and telemetry pipeline sequences.
