@@ -30,9 +30,24 @@ GAgent-skill-p1/
 │       └── SKILL.md              # Instructions on composing auth & protocol to query backend
 ├── pyproject.toml              # Project dependencies, build targets, and metadata
 ├── agents-cli-manifest.yaml    # Unified deployment manifest
-├── .gitignore                    # Local files exclusion rules
-└── README.md                     # This documentation guide
+├── install_skills.sh           # 🚀 Customization installer script for Antigravity Workspace
+├── AGENTS.md                   # Local customization routing guidelines
+├── ARCHITECTURE_DIAGRAM.md     # 📐 Complete system architecture & sequence flow charts
+├── MEDIUM_ARTICLE.md           # 📰 Deep-dive technical article draft
+├── .gitignore                  # Local files exclusion rules
+└── README.md                   # This documentation guide
 ```
+
+---
+
+## 📖 Additional Resources & Documentation
+
+We have provided highly detailed system diagrams, guides, and drafts for team alignment:
+*   📐 **[Architecture and Sequence Flows](./ARCHITECTURE_DIAGRAM.md)**: Mermaid charts representing multi-turn queries, session memory persistence, and telemetry pipeline sequences.
+*   📰 **[Deep-Dive Technical Article](./MEDIUM_ARTICLE.md)**: A complete ready-to-publish Medium post outlining the business case, development setup, and serverless design advantages.
+*   🔑 **[GCP Authentication Skill Specs](./skills/gcp-auth/SKILL.md)**: Inner technical guidelines on credential retrieval.
+*   💬 **[A2A Protocol Schema Specs](./skills/a2a-protocol/SKILL.md)**: Schema structures and Python dispatch blueprints.
+*   📖 **[Knowledge Catalog Skill Specs](./skills/knowledge-catalog-agent/SKILL.md)**: Runbook rules mapping target resource configurations and semantic schemas.
 
 ---
 
@@ -56,7 +71,7 @@ The service account assigned to the Agent Platform Agent Runtime container (spec
 
 ---
 
-## ⚡ Setup & Dependencies
+## ⚡ Setup & Local Development Playground
 
 First, configure your local environment and authenticate with Google Cloud:
 
@@ -69,11 +84,32 @@ gcloud auth application-default login
 uv tool install google-agents-cli
 ```
 
+### 🧭 Installing Agentic Skills into Antigravity
+The custom skills included in this package can be registered into your Antigravity IDE (either locally to this workspace or globally for all projects) using the custom installer:
+
+```bash
+# Set script executable and run
+chmod +x install_skills.sh
+./install_skills.sh
+```
+
+### 💻 Running the Local Interactive Playground
+Test the entire ADK application, tool triggers, and telemetry hooks interactively on your machine before pushing to production:
+
+```bash
+# Install local locked requirements
+agents-cli install
+
+# Launch the premium web-based development playground
+agents-cli playground
+```
+This serves a local visual playground where you can directly interact with Gemini 2.5, monitor the execution logs of your connected MCP servers, and view the raw output of schema mappings.
+
 ---
 
 ## 🚢 Deploying the Agent to Google Cloud
 
-The agent can be deployed dynamically to any Google Cloud project and location using the `agents-cli`.
+When you're ready to make your agent public, deploy it dynamically to any Google Cloud project and location:
 
 ### Command Syntax:
 ```bash
