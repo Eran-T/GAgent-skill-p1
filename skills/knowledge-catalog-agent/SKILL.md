@@ -54,5 +54,6 @@ When formulating queries for the remote agent, craft them to target the followin
 ## 5. Efficient Execution Blueprint
 To query this agent efficiently:
 1.  Read this file to understand the **Project details**, **Query patterns**, and **IAM permission configurations** required.
-2.  Import the generic execution functions from the **`gcp-agent-client`** skill.
-3.  Write and execute a single scratch script containing the Agent Client initialized with the `Resource Name` and `Project ID` defined above.
+2.  Load the **`gcp-auth`** skill to obtain a fresh OAuth2 bearer token for the `Authorization` header.
+3.  Load the **`a2a-protocol`** skill to construct the JSON-RPC 2.0 `message/send` payload and parse the response (`contextId`, `artifacts`). Reuse the Python dispatcher in its `references/a2a-payload-context.md`.
+4.  Write and execute a single scratch script that sends the A2A request to the `Resource Name` defined above, authenticated with the token from step 2.

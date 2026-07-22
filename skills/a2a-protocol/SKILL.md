@@ -15,6 +15,7 @@ This skill defines the technical rules and formats for executing cross-agent cal
 When sending requests to a remote agent endpoint, the client must authenticate using an active Google Cloud credential.
 *   **Action:** Call the `gcp-auth` skill to retrieve a fresh OAuth2 token.
 *   **Header:** Inject the retrieved token as `Authorization: Bearer <token>`.
+*   **⚠️ Security:** The bearer token belongs **only** in the `Authorization` header. Never place the raw access token inside the JSON-RPC payload body — request bodies are persisted to trace logs (GCS/BigQuery) and would leak the credential.
 
 ### 2. Constructing the JSON-RPC Payload (`message/send`)
 The root JSON-RPC request must define `jsonrpc: "2.0"`, an alphanumeric `id`, a target `method: "message/send"`, and nested `params`:
@@ -25,13 +26,12 @@ The root JSON-RPC request must define `jsonrpc: "2.0"`, an alphanumeric `id`, a 
         ```json
         {"kind": "text", "text": "Locate marketing campaign table."}
         ```
-    *   **DataPart (Delegation Credentials):** Injects user metadata to authorize downstream tool executions:
+    *   **DataPart (Delegation Metadata):** Injects the caller's identity so the backend can scope tool executions and recall memory. Do **not** include the access token here — it travels in the `Authorization` header only:
         ```json
         {
           "kind": "data",
           "data": {
-            "user_id": "user@example.com",
-            "user_access_token": "<access_token>"
+            "user_id": "user@example.com"
           }
         }
         ```

@@ -6,7 +6,7 @@ This document outlines the detailed JSON schema structure and Python code templa
 
 ## 1. Full JSON-RPC A2A Request Schema (`message/send`)
 
-Submit the following JSON payload inside the `input` field of the Agent Platform Agent Runtime query POST request:
+Submit the following JSON payload inside the `input` field of the Agent Platform Agent Runtime query POST request. Authenticate the request with the `Authorization: Bearer <token>` HTTP header — never embed the raw access token in the payload body:
 
 ```json
 {
@@ -23,8 +23,7 @@ Submit the following JSON payload inside the `input` field of the Agent Platform
         },
         {
           "data": {
-            "user_id": "admin@example.com",
-            "user_access_token": "ya29.a0AT3oNZ_..."
+            "user_id": "admin@example.com"
           }
         }
       ]
@@ -78,13 +77,15 @@ def send_a2a_message(endpoint_url: str, token: str, prompt: str, user_id: str, s
         "Content-Type": "application/json"
     }
 
-    # 1. Compose Parts
+    # 1. Compose Parts.
+    # NOTE: the access token authenticates via the Authorization header only.
+    # Only the caller identity (user_id) is placed in the payload body, so the
+    # backend can scope tools and recall memory without leaking the token to logs.
     parts = [{"text": prompt}]
-    if user_id and token:
+    if user_id:
         parts.append({
             "data": {
-                "user_id": user_id,
-                "user_access_token": token
+                "user_id": user_id
             }
         })
 

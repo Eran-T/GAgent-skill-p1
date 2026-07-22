@@ -15,7 +15,7 @@ By packaging custom customization skills (`gcp-auth`, `a2a-protocol`, `knowledge
 ```
    [ Local IDE Coding Assistant ]
              │
-             ├──► 1. Loads local customization skills (.agents/skills/*)
+             ├──► 1. Loads customization skills (.agents/skills/* or ~/.agents/skills/*)
              ├──► 2. Uses gcp-auth to fetch delegated ADC token
              ├──► 3. Uses a2a-protocol to structure JSON-RPC 2.0 payload
              │
@@ -36,7 +36,7 @@ This interaction allows a local IDE assistant to acts as a secure, authenticated
 GAgent-skill-p1/
 ├── app/                        # 🤖 Deployable Python ADK Agent Code
 │   ├── app_utils/              # Tracing, types, and closed requirements
-│   │   ├── .requirements.txt   # Locked python container dependencies
+│   │   ├── requirements.txt    # Locked python container dependencies
 │   │   ├── telemetry.py        # Telemetry and logging configuration
 │   │   └── typing.py           # Struct models for user feedback
 │   ├── agent.py                # Main agent logic (Gemini, Dataplex, and Charting MCPs)
@@ -134,7 +134,7 @@ agents-cli deploy \
 ```
 
 ### What happens during deployment:
-1.  **Dependency Gathering:** The CLI packages the `app/` folder and resolves its container requirements from `app/app_utils/.requirements.txt`.
+1.  **Dependency Gathering:** The CLI packages the `app/` folder and resolves its container requirements from `app/app_utils/requirements.txt`.
 2.  **Compilation & Packaging:** The agent code is packaged and containerized automatically.
 3.  **Deployment:** The container is deployed to the **Agent Platform Agent Runtime** in your specified `--region`.
 4.  **Retrieval of resource name:** Once successfully deployed, the CLI will output your live Resource URN:
