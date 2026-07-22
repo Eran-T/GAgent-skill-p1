@@ -47,7 +47,7 @@ GAgent-skill-p1/
 │   └── knowledge-catalog-agent/  # 📖 Skill 3: Master Agentic Mesh Composition Skill
 ├── pyproject.toml              # Project dependencies, build targets, and metadata
 ├── agents-cli-manifest.yaml    # Unified deployment manifest
-├── install_skills.sh           # 🚀 Customization installer script for Antigravity Workspace
+├── install_skills.sh           # 🚀 Skills installer (.agents/ convention, local or global)
 ├── AGENTS.md                   # Local customization routing guidelines
 ├── ARCHITECTURE_DIAGRAM.md     # 📐 Complete system architecture & sequence flow charts
 ├── .gitignore                    # Local files exclusion rules
@@ -86,6 +86,14 @@ The service account assigned to the Agent Platform Agent Runtime container (spec
 
 ---
 
+## ✅ Prerequisites
+
+*   **Python** `>=3.11,<3.14`
+*   **[`uv`](https://docs.astral.sh/uv/)** – Astral's Python package manager (used by `agents-cli`)
+*   **[`gcloud` CLI](https://cloud.google.com/sdk/docs/install)** – authenticated against a Google Cloud project with the IAM roles listed above
+
+---
+
 ## ⚡ Setup & Local Development Playground
 
 First, configure your local environment and authenticate with Google Cloud:
@@ -99,14 +107,19 @@ gcloud auth application-default login
 uv tool install google-agents-cli
 ```
 
-### 🧭 Installing Agentic Skills into Antigravity
-The custom skills included in this package can be registered into your Antigravity IDE (either locally to this workspace or globally for all projects) using the custom installer:
+### 🧭 Installing the Agentic Skills
+The custom skills are installed using the vendor-neutral `.agents/` convention, which is discovered by modern agentic coding tools (OpenCode, Claude-compatible loaders, Antigravity, etc.). The installer also copies `AGENTS.md` so the skill-routing directives load alongside the skills.
 
 ```bash
-# Set script executable and run
-chmod +x install_skills.sh
+# Interactive (prompts for local vs. global)
 ./install_skills.sh
+
+# Or non-interactively:
+./install_skills.sh --local    # installs to ./.agents/   (this workspace only)
+./install_skills.sh --global   # installs to ~/.agents/   (all your workspaces)
 ```
+
+Re-running is safe: existing skills and `AGENTS.md` are backed up before being overwritten. The script can be invoked from any directory.
 
 ### 💻 Running the Local Interactive Playground
 Test the entire ADK application, tool triggers, and telemetry hooks interactively on your machine before pushing to production:
