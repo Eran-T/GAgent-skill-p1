@@ -1,8 +1,32 @@
-# 🤖 GAgent-Skill-p1: Agent Platform Agent Runtime Deployment & Skill Composition
+# 🤖 GAgent-Skill-p1: Agent Platform Agent Runtime Deployment & Client Consumption
 
-Welcome to the **GAgent-Skill-p1** repository! This package represents **Part 1** of our Agentic Mesh architecture. It contains both the deployable Python backend agent code and its three associated agentic skills.
+Welcome to the **GAgent-Skill-p1** package! This repository represents **Part 1** of our Agentic Mesh architecture. It contains the deployable Python backend agent code, standard configuration manifests, and custom modular customization skills.
 
-This project is built using the **Google Agent Development Kit (ADK)** and is optimized to deploy and run seamlessly on the **Agent Platform Agent Runtime** (formerly Reasoning Engines). 
+This project is built using the **Google Agent Development Kit (ADK)** and is optimized to deploy and run seamlessly on the **Agent Platform Agent Runtime** (formerly Reasoning Engines).
+
+---
+
+## 🎯 The Main Use Case: Consuming Deployed GCP Agents via Agentic Coding Tools
+
+While the `agents-cli` toolchain manages packaging and registering your backend agent container to Google Cloud, the principal use case of this repository is **client-side consumption**. 
+
+By packaging custom customization skills (`gcp-auth`, `a2a-protocol`, `knowledge-catalog-agent`) inside the `.agents/` folder, we equip **local agentic coding tools** (such as IDE assistants, Claude Code, or Antigravity) with the explicit instructions and sequence protocols required to consume and query your deployed GCP agents dynamically:
+
+```
+   [ Local IDE Coding Assistant ]
+             │
+             ├──► 1. Loads local customization skills (.agents/skills/*)
+             ├──► 2. Uses gcp-auth to fetch delegated ADC token
+             ├──► 3. Uses a2a-protocol to structure JSON-RPC 2.0 payload
+             │
+             ▼ 4. Sends POST request to deployed Agent Platform URN
+   [ Agent Platform Agent Runtime (GCP) ]
+             │
+             ▼ 5. Runs Dataplex Catalog Search / Charting tool execution
+   [ Output Result returned to IDE coding assistant ]
+```
+
+This interaction allows a local IDE assistant to acts as a secure, authenticated client that automatically delegates complex metadata queries and analytical tasks to your stateful business agent running securely on GCP.
 
 ---
 
@@ -19,35 +43,26 @@ GAgent-skill-p1/
 │   └── agent_runtime_app.py    # Official Agent Platform Agent Runtime entrypoint
 ├── skills/                     # 🧭 The 3 custom, modular Agentic Skills
 │   ├── gcp-auth/                 # 🔑 Skill 1: GCP Authentication Skill
-│   │   ├── SKILL.md              # Instructions for token generation
-│   │   └── references/
-│   │       └── gcp-auth-context.md # Shell commands & Python programmatic token helper
 │   ├── a2a-protocol/             # 💬 Skill 2: JSON-RPC 2.0 A2A Communication Standard
-│   │   ├── SKILL.md              # Payload, session context, and text/data parts instructions
-│   │   └── references/
-│   │       └── a2a-payload-context.md # Nested JSON payload schemas and httpx dispatcher
 │   └── knowledge-catalog-agent/  # 📖 Skill 3: Master Agentic Mesh Composition Skill
-│       └── SKILL.md              # Instructions on composing auth & protocol to query backend
 ├── pyproject.toml              # Project dependencies, build targets, and metadata
 ├── agents-cli-manifest.yaml    # Unified deployment manifest
 ├── install_skills.sh           # 🚀 Customization installer script for Antigravity Workspace
 ├── AGENTS.md                   # Local customization routing guidelines
 ├── ARCHITECTURE_DIAGRAM.md     # 📐 Complete system architecture & sequence flow charts
-├── MEDIUM_ARTICLE.md           # 📰 Deep-dive technical article draft
-├── .gitignore                  # Local files exclusion rules
-└── README.md                   # This documentation guide
+├── .gitignore                    # Local files exclusion rules
+└── README.md                     # This documentation guide
 ```
 
 ---
 
-## 📖 Additional Resources & Documentation
+## 🛠️ Google `agents-cli` Toolchain Context
 
-We have provided highly detailed system diagrams, guides, and drafts for team alignment:
-*   📐 **[Architecture and Sequence Flows](./ARCHITECTURE_DIAGRAM.md)**: Mermaid charts representing multi-turn queries, session memory persistence, and telemetry pipeline sequences.
-*   📰 **[Deep-Dive Technical Article](./MEDIUM_ARTICLE.md)**: A complete ready-to-publish Medium post outlining the business case, development setup, and serverless design advantages.
-*   🔑 **[GCP Authentication Skill Specs](./skills/gcp-auth/SKILL.md)**: Inner technical guidelines on credential retrieval.
-*   💬 **[A2A Protocol Schema Specs](./skills/a2a-protocol/SKILL.md)**: Schema structures and Python dispatch blueprints.
-*   📖 **[Knowledge Catalog Skill Specs](./skills/knowledge-catalog-agent/SKILL.md)**: Runbook rules mapping target resource configurations and semantic schemas.
+The **[`agents-cli`](https://cloud.google.com/vertex-ai/docs)** is the unified CLI manager designed to streamline the lifecycle of ADK-based agents. It bridges local developer playgrounds with enterprise GCP cloud runtimes:
+
+*   **`agents-cli install`**: Gathers and locks third-party python container packages inside `.venv` using Astral `uv`.
+*   **`agents-cli playground`**: Launches a premium web UI on your local machine to test prompt responses, view active MCP tool schemas, and trace output JSONs before deploying.
+*   **`agents-cli deploy`**: Automatically packages your backend agent, containerizes it, registers it to GCP Artifact Registry, and instantiates your live URN endpoint.
 
 ---
 
@@ -64,7 +79,7 @@ The identity executing `agents-cli deploy` requires:
 ### 2. For the Runtime Service Account
 The service account assigned to the Agent Platform Agent Runtime container (specified during deploy or fallback to default Compute Engine SA) requires:
 *   **`roles/aiplatform.user`** – To access and query Gemini models via Vertex AI GenAI APIs.
-*   **`roles/mcp.toolUser`** – **CRITICAL.** Grants authorization to communicate with and execute tools on Google Cloud's managed MCP servers (such as `https://dataplex.googleapis.com/mcp`).
+*   **`roles/mcp.toolUser`** – **CRITICAL.** Grants authorization to communicate with and execute tools on Google Cloud's managed MCP servers.
 *   **`roles/dataplex.metadataReader`** – To search, view, and list assets inside the Dataplex Knowledge Catalog.
 *   **`roles/bigquery.dataEditor`** & **`roles/bigquery.user`** – To write live interaction telemetry data to the BigQuery Analytics tables.
 *   **`roles/storage.objectCreator`** – To upload conversation trace logs and OpenTelemetry artifacts to the configured Cloud Storage logging bucket.
@@ -100,10 +115,9 @@ Test the entire ADK application, tool triggers, and telemetry hooks interactivel
 # Install local locked requirements
 agents-cli install
 
-# Launch the premium web-based development playground
+# Launch the local development playground
 agents-cli playground
 ```
-This serves a local visual playground where you can directly interact with Gemini 2.5, monitor the execution logs of your connected MCP servers, and view the raw output of schema mappings.
 
 ---
 
@@ -130,36 +144,8 @@ agents-cli deploy \
 
 ---
 
-## 🧭 The 3 Core Agentic Skills
+## 🔗 Additional References & Documentation
 
-### 1. `gcp-auth` (GCP Authentication)
-Instructs local code generators and AI agents on how to generate dynamic Application Default Credentials (ADC) tokens.
-*   **Purpose:** Ensures any API calls targeting remote GCP endpoints have an active Bearer Authorization token.
-*   **Key Asset:** Provides a pure-python `google-auth` token helper to fetch access credentials without subprocess shell overhead.
-
-### 2. `a2a-protocol` (Agent-to-Agent JSON-RPC 2.0 Standard)
-Standardizes multi-agent communication by structuring standard JSON-RPC 2.0 requests over HTTP.
-*   **Purpose:** Standardizes parameters like `contextId` (to preserve conversation session histories) and separates user instructions (`TextPart`) from authorization metadata (`DataPart`).
-*   **Key Asset:** Includes a complete, copy-pasteable Python implementation to structure and dispatch HTTP POST queries.
-
-### 3. `knowledge-catalog-agent` (Master Usage & Mesh Composition)
-The master skill that orchestrates the overall agent-to-agent connection.
-*   **Purpose:** Coordinates the composition of `gcp-auth` and `a2a-protocol` to query a remote Reasoning Engine and trigger backend GCP Dataplex/BigQuery tool execution.
-*   **Directives:** Teaches the client agent how to map input arguments and prompt intent to standard Agent Platform endpoints.
-
----
-
-## 📐 Secured Delegate Tool Execution Flow
-
-```
-   [ Local Client Agent ]
-             │
-             ├──► 1. Invokes gcp-auth (Get Access Token)
-             ├──► 2. Invokes a2a-protocol (Structure JSON-RPC payload)
-             │
-             ▼ 3. POST /v1/projects/<PROJECT_ID>/locations/<LOCATION>/reasoningEngines/<ENGINE_ID>:query
-   [ Agent Platform Agent Runtime ]
-             │
-             ▼ 4. Activates Dataplex MCP Client (with delegated Token)
-   [ Google Dataplex Catalog ]
-```
+*   🛠️ **[`agents-cli`](https://cloud.google.com/vertex-ai/docs)**: Official developer reference documentation for the Google Agents Command Line Toolchain.
+*   📖 **[`agent-registry/google-managed-mcps`](https://cloud.google.com/dataplex/docs)**: Reference architecture and connection guidelines for Google-managed Model Model Model Context Protocol (MCP) servers (e.g., Dataplex Knowledge Catalog).
+*   📐 **[Architecture and Sequence Flows](./ARCHITECTURE_DIAGRAM.md)**: Mermaid charts representing multi-turn queries, session memory persistence, and telemetry pipeline sequences.
