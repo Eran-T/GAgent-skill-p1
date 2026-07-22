@@ -11,7 +11,7 @@ This skill instructs the agent on how to negotiate and generate Google Cloud aut
 
 ## 🧭 Authentication Directives
 
-When invoking any external GCP service, reasoning engines, or agent registry APIs:
+When invoking any external GCP service, Agent Platform Agent Runtime, or agent registry APIs:
 
 1.  **Check for Active Credentials:**
     Attempt to fetch an active token. If the process raises authorization or authentication errors, prompt the user or execute:

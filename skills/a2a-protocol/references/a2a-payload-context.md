@@ -6,7 +6,7 @@ This document outlines the detailed JSON schema structure and Python code templa
 
 ## 1. Full JSON-RPC A2A Request Schema (`message/send`)
 
-Submit the following JSON payload inside the `input` field of the Vertex AI Reasoning Engine query POST request:
+Submit the following JSON payload inside the `input` field of the Agent Platform Agent Runtime query POST request:
 
 ```json
 {
@@ -104,7 +104,7 @@ def send_a2a_message(endpoint_url: str, token: str, prompt: str, user_id: str, s
     if session_id:
         a2a_payload["params"]["contextId"] = session_id
 
-    # 3. Dispatch to Vertex AI Agent Runtime
+    # 3. Dispatch to Agent Platform Agent Runtime
     response = httpx.post(
         endpoint_url,
         json={"class_method": "query", "input": a2a_payload},

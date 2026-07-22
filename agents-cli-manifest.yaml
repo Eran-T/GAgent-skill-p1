@@ -1,0 +1,16 @@
+name: "gagent-skills"
+acli_version: "0.2.0"
+agent_directory: "app"
+region: "us-central1"
+
+base_template: "local_Gagent-skills"
+generated_at: "2026-07-13T11:15:12.685679+00:00"
+language: "python"
+create_params:
+  deployment_target: "agent_runtime"
+  session_type: "none"
+  cicd_runner: "skip"
+  include_data_ingestion: false
+  
+  datastore: "none"
+  agent_guidance_filename: "GEMINI.md"

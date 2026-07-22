@@ -37,7 +37,7 @@ The root JSON-RPC request must define `jsonrpc: "2.0"`, an alphanumeric `id`, a 
         ```
 
 ### 3. Long-Term Memory Extraction
-To trigger memory-bank history recall at the backend reasoning engine, you **MUST** pass the `user_id` inside the `DataPart` payload block. This prompts the Vertex AI Agent Engine to pull the caller's unique memory-bank associations automatically.
+To trigger memory-bank history recall at the backend agent, you **MUST** pass the `user_id` inside the `DataPart` payload block. This prompts the Agent Platform Agent Runtime to pull the caller's unique memory-bank associations automatically.
 
 ### 4. Parsing Responses
 *   **Session State:** Inspect the JSON-RPC `result` block to extract the active `contextId`. Persist this key and pass it in subsequent turns to load the exact conversation context.
