@@ -19,7 +19,7 @@ graph TD
         C["Client Application / Agy CLI"]:::primary
     end
 
-    subgraph Google Cloud Platform (us-central1)
+    subgraph GCP ["Google Cloud Platform (us-central1)"]
         subgraph Agent Platform Agent Runtime
             ADK["google-adk Agent Engine App<br>(gagent-skills)"]:::primary
             BQ_P["BigQuery Analytics Plugin"]:::secondary
